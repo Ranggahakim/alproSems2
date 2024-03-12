@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+
+    <style>
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: max-content;
+        }
+
+        th, td{
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HALO SEMUA</h1>
+    <p><i>created by Rangga</i></p>
+    <br>
+
+    <h4><b>Ini Tabel Siswa</b></h4>
+    
+    <table>
+        <tr>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>NIS</th>
+            <th>Gender</th>
+            <th>Tempat Lahir</th>
+            <th>Tanggal Lahir</th>
+            <th>Alamat</th>
+            <th>No Telepon</th>
+            <th>Agama</th>
+            <th>Tahun Masuk</th>
+            <th>Wali</th>
+            <th>Alamat Wali</th>
+            <th>No Telepon Wali</th>
+            <th>Ayah</th>
+            <th>Ibu</th>
+        </tr>
+        {% for siswa in allSiswa%}
+        <tr>
+            <td> {{siswa.nik}} </td>
+            <td> {{siswa.nama}} </td>
+            <td> {{siswa.nis}} </td>
+            {% if siswa.gender %}
+            <td>Laki-laki</td>
+            {% else %}
+            <td>Perempuan</td>
+            {% endif %}
+            <td> {{siswa.tempat_lahir}} </td>
+            <td> {{siswa.tanggal_lahir}} </td>
+            <td> {{siswa.alamat}} </td>
+            <td> {{siswa.no_telepon}} </td>
+            <td> {{siswa.agama}} </td>
+            <td> {{siswa.tahun_masuk}} </td>
+            <td> {{siswa.wali}} </td>
+            <td> {{siswa.alamat_wali}} </td>
+            <td> {{siswa.no_telepon_wali}} </td>
+            <td> {{siswa.ayah}} </td>
+            <td> {{siswa.ibu}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Presensi</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for presensi in allPresensi %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <h4><b>Ini tabel Nilai Siswa</b></h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>NIK Siswa</th>
+            <th>Komponen Penilaian</th>
+            <th>Nilai</th>
+        </tr>
+        {% for nilai in allNilai %}
+        <tr>
+            <td> {{nilai.id}} </td>
+            <td> {{nilai.siswa.nik}} </td>
+            <td> {{nilai.komponen_penilaian}} </td>
+            <td> {{nilai.nilai}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
