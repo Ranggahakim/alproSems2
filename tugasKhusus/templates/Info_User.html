@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% extends "pageTemplate.html" %}
+    
+    {% block header%}
+
+        {% if userType == "Siswa" %}
+        
+            Info Siswa 
+        
+        {% elif userType == "Guru" %}
+        
+            Info Guru
+        
+        {% elif userType == "Karyawan" %}
+        
+            Info Karyawan
+        
+        {% endif %}
+
+    {% endblock %}
+    
+    
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
+
+</head>
+<body>
+
+        {% block sideBar %}{% endblock  %}
+
+        {% block content %}
+
+        <h1>Halo {{ userData.nama }}</h1>
+        <h5>Status User: {{ userType }} </h5>
+
+        {% if userType == "Siswa" %}
+            <p>Kelas : {{ kelasSiswa }} </p>
+        {% endif %}
+        <br>
+
+
+        
+        {% if userType ==  "Siswa" %}
+        <table class="table table-bordered border-primary">
+            <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>NIS</th>
+                <th>Gender</th>
+                <th>Tempat Lahir</th>
+                <th>Tanggal Lahir</th>
+                <th>Alamat</th>
+                <th>No Telepon</th>
+                <th>Agama</th>
+                <th>Tahun Masuk</th>
+                <th>Wali</th>
+                <th>Alamat Wali</th>
+                <th>No Telepon Wali</th>
+                <th>Ayah</th>
+                <th>Ibu</th>            
+            </tr>
+            <tr>
+                <td> {{userData.nik}} </td>
+                <td> {{userData.nama}} </td>
+                <td> {{userData.nis}} </td>
+                {% if userData.gender %}
+                <td>Laki-laki</td>
+                {% else %}
+                <td>Perempuan</td>
+                {% endif %}
+                <td> {{userData.tempat_lahir}} </td>
+                <td> {{userData.tanggal_lahir}} </td>
+                <td> {{userData.alamat}} </td>
+                <td> {{userData.no_telepon}} </td>
+                <td> {{userData.agama}} </td>
+                <td> {{userData.tahun_masuk}} </td>
+                <td> {{userData.wali}} </td>
+                <td> {{userData.alamat_wali}} </td>
+                <td> {{userData.no_telepon_wali}} </td>
+                <td> {{userData.ayah}} </td>
+                <td> {{userData.ibu}} </td>
+            </tr>
+        </table>
+
+        {% elif userType == "Guru" %}
+        <table class="table table-bordered border-primary">
+            <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Nomor Induk Guru</th>
+                <th>Nomor Induk Pegawai</th>
+                <th>Gender</th>
+                <th>Tempat Lahir</th>
+                <th>Tanggal Lahir</th>
+                <th>Alamat</th>
+                <th>No Telepon</th>
+                <th>Agama</th>
+                <th>Tahun Masuk</th>       
+            </tr>
+            <tr>
+                <td> {{userData.nik}} </td>
+                <td> {{userData.nama}} </td>
+                <td> {{userData.nomor_induk_guru}} </td>
+                <td> {{userData.nomor_induk_pegawai}} </td>
+                {% if userData.gender %}
+                <td>Laki-laki</td>
+                {% else %}
+                <td>Perempuan</td>
+                {% endif %}
+                <td> {{userData.tempat_lahir}} </td>
+                <td> {{userData.tanggal_lahir}} </td>
+                <td> {{userData.alamat}} </td>
+                <td> {{userData.no_telepon}} </td>
+                <td> {{userData.agama}} </td>
+                <td> {{userData.tahun_masuk}} </td>
+            </tr>
+        </table>
+        {% elif userType == "Karyawan" %}
+        <table class="table table-bordered border-primary">
+            <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Nomor Induk Pegawai</th>
+                <th>Gender</th>
+                <th>Tempat Lahir</th>
+                <th>Tanggal Lahir</th>
+                <th>Alamat</th>
+                <th>No Telepon</th>
+                <th>Agama</th>
+                <th>Tahun Masuk</th>       
+            </tr>
+            <tr>
+                <td> {{userData.nik}} </td>
+                <td> {{userData.nama}} </td>
+                <td> {{userData.nomor_induk_pegawai}} </td>
+                {% if userData.gender %}
+                <td>Laki-laki</td>
+                {% else %}
+                <td>Perempuan</td>
+                {% endif %}
+                <td> {{userData.tempat_lahir}} </td>
+                <td> {{userData.tanggal_lahir}} </td>
+                <td> {{userData.alamat}} </td>
+                <td> {{userData.no_telepon}} </td>
+                <td> {{userData.agama}} </td>
+                <td> {{userData.tahun_masuk}} </td>
+            </tr>
+        </table>
+        {% endif %}
+    
+        <br>    
+        {% if userType == "Guru" and daftarSiswaKelas is not None%}
+
+            <p>Kelas : {{ kelasGuru.nama }}</p>
+
+
+            <p>jumlah siswa : {{ daftarSiswaKelas.count }}</p>
+
+            <table class="table table-bordered border-primary">
+                <tr>
+                    <th>NIK</th>
+                    <th>Nama Siswa</th>
+                </tr>
+                {% for siswa in daftarSiswaKelas %}
+                    <tr>
+                        <td> {{siswa.siswa.nik}} </td>
+                        <td> {{siswa.siswa.nama}} </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+
+        {% endblock  %}
+</body>
+</html>

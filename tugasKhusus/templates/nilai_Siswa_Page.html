@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilai Siswa</title>
+
+    {% extends "pageTemplate.html" %}
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h1>Nilai Siswa</h1>
+    <p>NIK: {{ siswa.nik }}</p>
+    
+    <table class="table table-bordered border-primary">
+        <tr>
+            <td>Mata Pelajaran</td>
+            <td>Nilai</td>
+        </tr>
+        {% for x in  nilai %}
+        <tr>
+            <td> {{x.komponen_penilaian.mata_pelajaran.nama}} </td>
+            <td> {{x.nilai}} </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+
+    {% endblock %}
+
+</body>
+</html>

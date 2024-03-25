@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <title>Masukkan Presensi</title>
+
+    {% extends "pageTemplate.html" %}
 
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-
 </head>
 <body>
-    <div class="w-75 p-3">
-        <h1>Selamat Datang</h1>
-        
-        <a class="btn btn-primary" href="login" role="button">Login</a>    
-    </div>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h1>Presensi</h1>
+    <hr>
+
+    {% endblock %}
+
 </body>
 </html>

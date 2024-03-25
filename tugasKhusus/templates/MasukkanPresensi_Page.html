@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan Presensi</title>
+
+    {% extends "pageTemplate.html" %}
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h1>Masukkan Presensi</h1>
+    <hr>
+
+    <form action="POST">
+        <div class="mb-3">
+            <label for="pertemuan-ke" class="form-label">Pertemuan Ke-</label>
+            <input type="number" class="form-control" name="pertemuan-ke" id="">
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Tanggal</label>
+            <input type="date" class="form-control" name="date" id="">
+        </div>
+        <div class="mb-3">
+            <p>Foto Pertemuan</p>
+            <input type="file" class="form-control" name="foto" id="foto">
+        </div>
+        <div class="mb-3">
+        <label for="status">Status Pertemuan</label>
+            <select class="form-select" aria-label="Default select example" name="status">
+                <option value="1">Offline</option>
+                <option value="2">Online</option>
+                <option value="3">Libur</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="materi" class="form-label">Materi</label>
+            <input type="number" class="form-control" name="materi" id="">
+        </div>
+        <div class="mb-3">
+            <label for="note" class="form-label">Catatan Tambahan</label>
+            <input type="text" class="form-control" name="note" id="">
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+    {% endblock %}
+
+</body>
+</html>

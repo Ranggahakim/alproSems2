@@ -11,16 +11,43 @@
 
 </head>
 <body>
-    <div class="w-75 p-3"><h1>Silahkan Login</h1>
+    <div class="d-flex align-items-center justify-content-center">
 
-        <form action="InfoSiswa" method="post">
-            {% csrf_token %}
-    
-            <label for="NIK">Masukkan NIK</label><br>
-            <input type="text" id="NIK" name='nik' >
-            <input type="submit" value="Submit">
-        </form>
+        <table>
+            <tr>
+                <th>
+                    <h1>Silahkan Login</h1>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <form action="InfoUser" method="post">
+                        {% csrf_token %}
+                        
+                        <label for="username">Username</label><br>
+                        <input type="text" id="username" name='username'>
+                        <br>
+                        <label for="password">Password</label><br>
+                        <input type="password" id="password" name='password'>
+                        <br>
+                        <input type="submit" value="Submit" style="margin-top: 20px;">
+                    </form>
+                </th>
+            </tr>
+        </table>
+        
+            
+            
     </div>
 
+    <script>
+        const alertMessage = window.location.search.substring(
+        window.location.search.indexOf('X-Redirect-Alert=') + 17
+      );
+    if (alertMessage) {
+        alert(alertMessage);
+    }
+
+    </script>
 </body>
 </html>
