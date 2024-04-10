@@ -55,6 +55,13 @@ class Kelas(models.Model):
     ketua_murid = models.ForeignKey("Siswa", on_delete=models.CASCADE)
     wali_kelas = models.ForeignKey("Guru", on_delete=models.CASCADE)
 
+class MappingGuru(models.Model):
+    id = models.AutoField(("ID Kelas Yang Diampu"),primary_key=True, auto_created=True, serialize=False)
+    guru = models.ForeignKey("Guru", on_delete=models.CASCADE)
+    mata_pelajaran = models.ForeignKey("MataPelajaran", on_delete=models.CASCADE, default=None)
+    kelas = models.ForeignKey("Kelas", on_delete=models.CASCADE)
+
+
 class Guru(models.Model):
     nik = models.CharField(("NIK Guru"), max_length=16, primary_key=True)
     nama = models.CharField(("Nama Guru"), max_length=255)

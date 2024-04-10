@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
 
-from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
+from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, MappingGuru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
 
 global_isLogin = False
 global_loginUser = None
@@ -146,20 +146,64 @@ def NilaiSiswaFunction(request):
    else: 
        return HttpResponseRedirect('InfoUser')
 
+def Presensi_Function(request):
+
+    if global_userType == "Guru" and global_isLogin == True:
+
+        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()
+        
+        context = {"userType": global_userType, "mapping":mapping}
+
+        template = loader.get_template('Presensi_Page.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return HttpResponseRedirect('InfoUser')
+
+def PresensiDetail_Function(request, id, namaKelas, namaMapel):
+
+    if global_userType == "Guru" and global_isLogin == True:
+
+        mapping = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+        
+        context = {"userType": global_userType, "mapping":mapping, "id":id, "mapel":namaMapel}
+
+        template = loader.get_template('PresensiDetail_Page.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return HttpResponseRedirect('InfoUser')
+
 def MasukkanPresensi(request):
 
     if global_userType == "Guru" and global_isLogin == True:
 
-        mapel = MataPelajaran.objects.filter()
-
 
         context = {"userType": global_userType}
 
-        template = loader.get_template('Presensi_Page.html')
+        template = loader.get_template('MasukkanPresensi_Page.html')
         return HttpResponse(template.render(context, request))
 
     else: 
        return HttpResponseRedirect('InfoUser')
+
+
+def InsertPresensi(request, id, mapel):
+
+    if global_userType == "Guru" and global_isLogin == True and request.method == "POST":
+
+        DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+        
+
+        for x in DaftarSiswa:
+            Presensi(mata_pelajaran = MataPelajaran.objects.filter(id=mapel).get(), siswa = Siswa.objects.filter(nik=x.siswa.nik).get(), pertemuan_ke = request.POST.get('pertemuan'), presensi = request.POST.get(x.siswa.nik)).save()
+
+        
+
+        
+        return HttpResponse("Data Sudah Disimpan")
+
+    else: 
+       return HttpResponseRedirect('InfoUser')
+
 
 
 def LogOut(request):

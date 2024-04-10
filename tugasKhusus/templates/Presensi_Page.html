@@ -19,6 +19,24 @@
     <h1>Presensi</h1>
     <hr>
 
+    <table class="table table-bordered border-primary">
+        <tr>
+            <th>Kelas</th>
+            <th>Mata Pelajaran</th>
+            <th>Action</th>
+        </tr>
+
+        {% for kelas in mapping %}
+        <tr>
+            <td> {{kelas.kelas.nama}} </td>
+            <td> {{kelas.mata_pelajaran.nama}} </td>
+            <td><a href="Presensi/Details/{{kelas.kelas.id}}{{kelas.kelas.nama}}{{kelas.mata_pelajaran.id}}"><button>Buka</button></a></td>
+        </tr>
+        
+        {% endfor %}
+
+    </table>
+
     {% endblock %}
 
 </body>
