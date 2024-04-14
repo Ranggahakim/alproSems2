@@ -1,8 +1,13 @@
+import os
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
+from django.conf import settings
+from .forms import BabPengajaranForm
 
+from .models import generate_filename
 from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, MappingGuru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
 
 global_isLogin = False
@@ -157,20 +162,64 @@ def Presensi_Function(request):
         template = loader.get_template('Presensi_Page.html')
         return HttpResponse(template.render(context, request))
     else:
-        return HttpResponseRedirect('InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')
 
 def PresensiDetail_Function(request, id, namaKelas, namaMapel):
 
     if global_userType == "Guru" and global_isLogin == True:
+        submitted = False
+        if request.method == "POST":
+            
+            bpForm = BabPengajaranForm(request.POST)
+
+            # DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+        
+            # for x in DaftarSiswa:
+            #     Presensi(mata_pelajaran = MataPelajaran.objects.filter(kode=namaMapel).get(), siswa = Siswa.objects.filter(nik=x.siswa.nik).get(), pertemuan_ke = bpForm, presensi = request.POST.get('presensi_' + x.siswa.nik)).save()
+
+
+            if bpForm.is_valid():
+
+                uploaded_file = bpForm.cleaned_data['foto']
+
+                # Get the uploaded filename
+                filename = uploaded_file.name
+
+                # Define the desired upload directory (replace with your actual path)
+                upload_to = 'uploads/'  # Example directory
+
+                # Optionally generate a unique filename
+                if settings.DEBUG:  # Consider using this only in development for simplicity
+                    filename = generate_filename(None, filename)  # Pass None as instance for new files
+
+                # Create the full path for the file
+                full_path = os.path.join(settings.MEDIA_ROOT, upload_to, filename)
+
+                # Open the file for writing in the desired directory (with proper permissions)
+                with open(full_path, 'wb') as destination:
+                    for chunk in uploaded_file.chunks():
+                        destination.write(chunk)
+                
+                bpForm.save()
+            #     return HttpResponseRedirect('/PresensiDetail_Function?submitted=True')
+            
+            
+                return HttpResponse(bpForm.cleaned_data['id'])
+        else:
+        
+            bpForm = BabPengajaranForm
+            
+            if 'sumbitted' in request.GET:
+                submitted = True
 
         mapping = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
         
-        context = {"userType": global_userType, "mapping":mapping, "id":id, "mapel":namaMapel}
+        context = {"userType": global_userType, "mapping":mapping, "id":id, "namaKelas":namaKelas, "mapel":namaMapel, 'bpForm':bpForm, 'submitted':submitted}
 
         template = loader.get_template('PresensiDetail_Page.html')
         return HttpResponse(template.render(context, request))
     else:
-        return HttpResponseRedirect('InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')
 
 def MasukkanPresensi(request):
 

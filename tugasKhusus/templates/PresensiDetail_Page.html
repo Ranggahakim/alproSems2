@@ -16,18 +16,17 @@
 
     {% block content %}
     
-    <h1>Presensi {{id}}  </h1>
+    <h3>Kelas : {{namaKelas}} </h3>
+    <h3>Kode Mata Pelajaran: {{mapel}}</h3>
     <hr>
     
     
-    <form action="InsertPresensi{{id}}{{mapel}}" method="post">
+    <form action="" method="POST">
         
         {% csrf_token %}
-    
 
-        <label for="pertemuan">Pertemuan ke: </label>
-        <input type="number" name="pertemuan" id="pertemuan">
-    
+        {{ bpForm.as_p }}
+
         <table class="table table-bordered border-primary">
             <tr>
                 <th>NIK</th>
@@ -44,7 +43,7 @@
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_alfa" checked>
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_alfa" checked>
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_alfa">
                                     Alfa
                                     </label>
@@ -52,7 +51,7 @@
                             </td>
                             <td>
                                     <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_sakit">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_sakit">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_sakit">
                                     Sakit
                                     </label>
@@ -60,7 +59,7 @@
                             </td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_izin">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_izin">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_izin">
                                     Izin
                                     </label>
@@ -68,7 +67,7 @@
                             </td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_hadir">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_hadir">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_hadir">
                                     Hadir
                                     </label>

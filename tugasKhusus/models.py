@@ -1,5 +1,33 @@
 from django.db import models
 
+
+import os
+import uuid
+
+def generate_filename(instance, filename):
+  """
+  Generates a unique filename for uploaded files.
+
+  Args:
+      instance: The model instance the file is being uploaded to (optional).
+      filename: The original filename uploaded by the user.
+
+  Returns:
+      A unique filename string.
+  """
+  ext = os.path.splitext(filename)[1]  # Get the file extension
+  if instance is not None:
+    # Use model instance data (e.g., user ID, slug) for filename generation (optional)
+    # Replace 'user_field' with the actual field name in your model
+    random_str = uuid.uuid4().hex[:6]  # Generate a random 6-character string
+    filename = f"{instance.user_field}_{random_str}{ext}"
+  else:
+    # Basic approach for general file uploads without a model instance
+    filename = f"{uuid.uuid4().hex}{ext}"
+  return filename
+
+
+
 # Create your models here.
 
 class Siswa(models.Model):
