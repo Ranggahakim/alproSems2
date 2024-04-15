@@ -21,7 +21,7 @@
     <hr>
     
     
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         
         {% csrf_token %}
 
@@ -43,7 +43,7 @@
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_alfa" checked>
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_alfa" value="0" checked>
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_alfa">
                                     Alfa
                                     </label>
@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                     <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_sakit">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_sakit" value="1">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_sakit">
                                     Sakit
                                     </label>
@@ -59,7 +59,7 @@
                             </td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_izin">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_izin" value="2">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_izin">
                                     Izin
                                     </label>
@@ -67,7 +67,7 @@
                             </td>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_hadir">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_hadir" value="3">
                                     <label class="form-check-label" for="{{siswa.siswa.nik}}_hadir">
                                     Hadir
                                     </label>

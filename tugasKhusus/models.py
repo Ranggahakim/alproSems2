@@ -66,7 +66,7 @@ class BabPengajaran(models.Model):
     mata_pelajaran = models.ForeignKey("MataPelajaran", on_delete=models.CASCADE)
     pertemuan_ke = models.IntegerField(("Pertemuan Ke-"))
     tanggal = models.DateField(("Tanggal Bab Pengajaran"))
-    foto = models.CharField(("Foto Pengajaran"), max_length=50) #==================================================== foto jadi VarChar?===============================
+    foto = models.FileField(("Foto Pengajaran"), upload_to='uploads/') #==================================================== foto jadi VarChar?===============================
     status = models.IntegerField(("Status Pengajaran"))
     materi = models.IntegerField(("Materi Pengajaran"))
     catatan_tambahan = models.CharField(("Catatan Tambahan Pengajaran"), max_length=255)

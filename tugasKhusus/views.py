@@ -1,7 +1,9 @@
 import os
 
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.conf import settings
@@ -170,41 +172,27 @@ def PresensiDetail_Function(request, id, namaKelas, namaMapel):
         submitted = False
         if request.method == "POST":
             
-            bpForm = BabPengajaranForm(request.POST)
-
-            # DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+            bpForm = BabPengajaranForm(request.POST, request.FILES)
+            
+            DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
         
-            # for x in DaftarSiswa:
-            #     Presensi(mata_pelajaran = MataPelajaran.objects.filter(kode=namaMapel).get(), siswa = Siswa.objects.filter(nik=x.siswa.nik).get(), pertemuan_ke = bpForm, presensi = request.POST.get('presensi_' + x.siswa.nik)).save()
 
 
             if bpForm.is_valid():
-
-                uploaded_file = bpForm.cleaned_data['foto']
-
-                # Get the uploaded filename
-                filename = uploaded_file.name
-
-                # Define the desired upload directory (replace with your actual path)
-                upload_to = 'uploads/'  # Example directory
-
-                # Optionally generate a unique filename
-                if settings.DEBUG:  # Consider using this only in development for simplicity
-                    filename = generate_filename(None, filename)  # Pass None as instance for new files
-
-                # Create the full path for the file
-                full_path = os.path.join(settings.MEDIA_ROOT, upload_to, filename)
-
-                # Open the file for writing in the desired directory (with proper permissions)
-                with open(full_path, 'wb') as destination:
-                    for chunk in uploaded_file.chunks():
-                        destination.write(chunk)
                 
-                bpForm.save()
-            #     return HttpResponseRedirect('/PresensiDetail_Function?submitted=True')
+                bpForm.instance.kelas = Kelas.objects.filter(nama = namaKelas).get()
+                bpForm.instance.mata_pelajaran = MataPelajaran.objects.filter(kode = namaMapel).get()
+
+            
+                bpForm.save(commit=True)
+
+                for x in DaftarSiswa:
+                    Presensi(mata_pelajaran = MataPelajaran.objects.filter(kode=namaMapel).get(), siswa = Siswa.objects.filter(nik=x.siswa.nik).get(), pertemuan_ke = bpForm.instance, presensi = int(request.POST.get('presensi_' + x.siswa.nik))).save()
+                
+                return HttpResponseRedirect('?submitted=True')
             
             
-                return HttpResponse(bpForm.cleaned_data['id'])
+                # return HttpResponse(bpForm.cleaned_data['id'])
         else:
         
             bpForm = BabPengajaranForm
