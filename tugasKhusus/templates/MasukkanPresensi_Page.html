@@ -16,42 +16,83 @@
 
     {% block content %}
     
-    <h1>Masukkan Presensi</h1>
+    <h3>Kelas : {{namaKelas}} </h3>
+    <h3>Kode Mata Pelajaran: {{mapel}}</h3>
     <hr>
 
-    <form action="POST">
-        <div class="mb-3">
-            <label for="pertemuan-ke" class="form-label">Pertemuan Ke-</label>
-            <input type="number" class="form-control" name="pertemuan-ke" id="">
-        </div>
-        <div class="mb-3">
-            <label for="date" class="form-label">Tanggal</label>
-            <input type="date" class="form-control" name="date" id="">
-        </div>
-        <div class="mb-3">
-            <p>Foto Pertemuan</p>
-            <input type="file" class="form-control" name="foto" id="foto">
-        </div>
-        <div class="mb-3">
-        <label for="status">Status Pertemuan</label>
-            <select class="form-select" aria-label="Default select example" name="status">
-                <option value="1">Offline</option>
-                <option value="2">Online</option>
-                <option value="3">Libur</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="materi" class="form-label">Materi</label>
-            <input type="number" class="form-control" name="materi" id="">
-        </div>
-        <div class="mb-3">
-            <label for="note" class="form-label">Catatan Tambahan</label>
-            <input type="text" class="form-control" name="note" id="">
-        </div>
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+    {% comment %} {% if daftarPertemuan. %}
+    
+        {% for pertemuan in  daftarPertemuan %}
+        
+        {% endfor %}
+    
+    {% endif %} {% endcomment %}
+    
+    
+    <form action="" method="POST" enctype="multipart/form-data">
+        
+        {% csrf_token %}
+
+        {{ bpForm.as_p }}
+
+        <table class="table table-bordered border-primary">
+            <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Action</th>
+            </tr>
+
+            {% for siswa in mapping %}
+            <tr>
+                <td>{{siswa.siswa.nik}} </td>
+                <td> {{siswa.siswa.nama}} </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_alfa" value="0" checked>
+                                    <label class="form-check-label" for="{{siswa.siswa.nik}}_alfa">
+                                    Alfa
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_sakit" value="1">
+                                    <label class="form-check-label" for="{{siswa.siswa.nik}}_sakit">
+                                    Sakit
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_izin" value="2">
+                                    <label class="form-check-label" for="{{siswa.siswa.nik}}_izin">
+                                    Izin
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="presensi_{{siswa.siswa.nik}}" id="{{siswa.siswa.nik}}_hadir" value="3">
+                                    <label class="form-check-label" for="{{siswa.siswa.nik}}_hadir">
+                                    Hadir
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            {% endfor %}
+
+        </table>
+    
+        <input type="submit" value="Submit" style="margin-top: 20px;">
     </form>
+
 
     {% endblock %}
 

@@ -13,41 +13,50 @@
 <body>
     <div class="d-flex align-items-center justify-content-center">
 
+        
+
         <table>
             <tr>
                 <th>
                     <h1>Silahkan Login</h1>
                 </th>
             </tr>
+            {% if isUserNotExist %}
+                <tr>
+                    <td>
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            User Tidak Ditemukan
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% if isPasswordWrong %}
+                <tr>
+                    <td>
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            Password Salah!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                    </td>
+                </tr>
+            {% endif %}
             <tr>
-                <th>
-                    <form action="InfoUser" method="post">
+                <td>
+                    <form action="" method="POST">
                         {% csrf_token %}
                         
-                        <label for="username">Username</label><br>
-                        <input type="text" id="username" name='username'>
-                        <br>
-                        <label for="password">Password</label><br>
-                        <input type="password" id="password" name='password'>
-                        <br>
-                        <input type="submit" value="Submit" style="margin-top: 20px;">
+                        {{ userForm.as_p }}
+
+                        <input type="submit" value="Submit" class="btn btn-primary">
                     </form>
-                </th>
+                </td>
             </tr>
         </table>
         
             
             
     </div>
-
-    <script>
-        const alertMessage = window.location.search.substring(
-        window.location.search.indexOf('X-Redirect-Alert=') + 17
-      );
-    if (alertMessage) {
-        alert(alertMessage);
-    }
-
-    </script>
 </body>
 </html>
