@@ -165,22 +165,22 @@ def Presensi_Function(request):
 
         mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()
         
-        context = {"userType": global_userType, "mapping":mapping}
+        context = {"userType": global_userType, "mapping":mapping, 'nikGuru':str(global_loginUser.nik)}
 
         template = loader.get_template('Presensi_Page.html')
         return HttpResponse(template.render(context, request))
     else:
         return HttpResponseRedirect('/tugasKhusus/InfoUser')
     
-def PresensiDetail_Function(request, id, namaKelas, kodeMapel):
-    if global_userType == "Guru" and global_isLogin == True:
+def PresensiDetail_Function(request, nikGuru, kelasId, namaKelas, kodeMapel):
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
 
         try:
-            daftarPertemuan = BabPengajaran.objects.filter(kelas__id = id, mata_pelajaran__kode = kodeMapel).all()
+            daftarPertemuan = BabPengajaran.objects.filter(kelas__id = kelasId, mata_pelajaran__kode = kodeMapel).all()
         except:
             daftarPertemuan = None
 
-        context = {"userType": global_userType, "id":id, "namaKelas":namaKelas, "mapel":kodeMapel, "daftarPertemuan":daftarPertemuan}
+        context = {"userType": global_userType, "id":kelasId, "namaKelas":namaKelas, "mapel":kodeMapel, "daftarPertemuan":daftarPertemuan, "nikGuru":nikGuru}
 
         template = loader.get_template('PresensiDetail_Page.html')
         return HttpResponse(template.render(context, request))
@@ -189,16 +189,15 @@ def PresensiDetail_Function(request, id, namaKelas, kodeMapel):
 
 
 
-def InsertPresensi_Function(request, id, namaKelas, kodeMapel):
+def InsertPresensi_Function(request, nikGuru, kelasId, namaKelas, kodeMapel):
 
-    if global_userType == "Guru" and global_isLogin == True:
-        submitted = False
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
 
         if request.method == "POST":
             
             bpForm = BabPengajaranForm(request.POST, request.FILES)
             
-            DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+            DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()
 
             if bpForm.is_valid():
                 
@@ -218,17 +217,87 @@ def InsertPresensi_Function(request, id, namaKelas, kodeMapel):
         else:
         
             bpForm = BabPengajaranForm
-            
-            if 'sumbitted' in request.GET:
-                submitted = True
 
-        mapping = DaftarSiswaKelas.objects.filter(Kelas__id = id).all()
+        mapping = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()
         
-        context = {"userType": global_userType, "mapping":mapping, "id":id, "namaKelas":namaKelas, "mapel":kodeMapel, 'bpForm':bpForm, 'submitted':submitted}
+        context = {"userType": global_userType, "mapping":mapping, "id":kelasId, "namaKelas":namaKelas, "mapel":kodeMapel, 'bpForm':bpForm}
 
         template = loader.get_template('MasukkanPresensi_Page.html')
         return HttpResponse(template.render(context, request))
         # return HttpResponse(namaKelas)
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+    
+def UpdatePresensi_Function(request, nikGuru, pertemuanId, idMapel):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+
+        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()
+        # savedPresensi = BabPengajaran.objects.filter(id = 9, mata_pelajaran_id = 2).values()
+
+        # return HttpResponse(savedPresensi)
+
+        if request.method == "POST":
+            
+            bpForm = BabPengajaranForm(request.POST, request.FILES, instance=savedPresensi)
+            
+            DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+
+            if bpForm.is_valid():
+                if not bpForm.cleaned_data['foto']:
+                    bpForm.instance.foto =  savedPresensi.foto
+
+                    return HttpResponse(savedPresensi.foto)
+
+                bpForm.save(commit=True)
+
+                for x in DaftarSiswa:
+                    x.presensi = int(request.POST.get('presensi_' + x.siswa.nik))
+                    x.save()
+                
+                return redirect(f"/tugasKhusus/Presensi/{nikGuru} {savedPresensi.kelas.id} {savedPresensi.kelas.nama} {savedPresensi.mata_pelajaran.kode}")
+
+            else:    
+                return HttpResponse(str(bpForm))
+        else:
+        
+            bpForm = BabPengajaranForm(initial={
+                'id':pertemuanId,
+                'pertemuan_ke':savedPresensi.pertemuan_ke,
+                'tanggal': savedPresensi.tanggal,
+                'status': savedPresensi.status,
+                'materi': savedPresensi.materi,
+                'catatan_tambahan': savedPresensi.catatan_tambahan,
+                'kelas': savedPresensi.kelas,
+                'mata_pelajaran': savedPresensi.mata_pelajaran,
+                'foto': savedPresensi.foto
+                })
+
+        mapping = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+
+        context = {"userType": global_userType, "mapping":mapping, "namaKelas":savedPresensi.kelas.nama, "mapel":savedPresensi.mata_pelajaran.kode, 'bpForm':bpForm, 'foto':savedPresensi.foto}
+
+        template = loader.get_template('MasukkanPresensi_Page.html')
+        return HttpResponse(template.render(context, request))
+    
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+
+    
+def DeletePresensi_Function(request, nikGuru, pertemuanId, idMapel):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+
+        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()
+
+        DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+
+        for x in DaftarSiswa:
+            x.delete()
+
+        savedPresensi.delete()
+
+        return redirect(f"/tugasKhusus/Presensi/{nikGuru} {savedPresensi.kelas.id} {savedPresensi.kelas.nama} {savedPresensi.mata_pelajaran.kode}")    
     else:
         return HttpResponseRedirect('/tugasKhusus/InfoUser')
 

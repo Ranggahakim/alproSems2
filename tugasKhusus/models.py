@@ -66,7 +66,7 @@ class BabPengajaran(models.Model):
     mata_pelajaran = models.ForeignKey("MataPelajaran", on_delete=models.CASCADE)
     pertemuan_ke = models.IntegerField(("Pertemuan Ke-"))
     tanggal = models.DateField(("Tanggal Bab Pengajaran"))
-    foto = models.FileField(("Foto Pengajaran"), upload_to='uploads/') #==================================================== foto jadi VarChar?===============================
+    foto = models.ImageField(("Foto Pengajaran"), upload_to='uploads/') #==================================================== foto jadi VarChar?===============================
     status = models.IntegerField(("Status Pengajaran"))
     materi = models.IntegerField(("Materi Pengajaran"))
     catatan_tambahan = models.CharField(("Catatan Tambahan Pengajaran"), max_length=255)
@@ -88,7 +88,6 @@ class MappingGuru(models.Model):
     guru = models.ForeignKey("Guru", on_delete=models.CASCADE)
     mata_pelajaran = models.ForeignKey("MataPelajaran", on_delete=models.CASCADE, default=None)
     kelas = models.ForeignKey("Kelas", on_delete=models.CASCADE)
-
 
 class Guru(models.Model):
     nik = models.CharField(("NIK Guru"), max_length=16, primary_key=True)

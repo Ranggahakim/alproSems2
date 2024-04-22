@@ -32,14 +32,19 @@
         <tr>
             <td> {{ pertemuan.pertemuan_ke }} </td>
             <td> {{ pertemuan.tanggal }} </td>
-            <td></td>
+            <td><a href="{{nikGuru}} {{pertemuan.id}} {{pertemuan.mata_pelajaran_id}}/UpdatePresensi">
+                <button type="submit">Update</button>
+            </a> 
+                <a href="{{nikGuru}} {{pertemuan.id}} {{pertemuan.mata_pelajaran_id}}/DeletePresensi">
+                <button type="submit">Delete</button>
+            </a></td>
         </tr>
 
         {% endfor %}
     </table>
 
     <br>
-    <a href="{{id}} {{namaKelas}} {{mapel}}/InsertPresensi"><button>+</button></a>
+    <a href="{{nikGuru}} {{id}} {{namaKelas}} {{mapel}}/InsertPresensi"><button>+</button></a>
 
 
     {% endblock %}
