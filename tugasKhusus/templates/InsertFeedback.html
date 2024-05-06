@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan Presensi</title>
+
+    {% extends "pageTemplate.html" %}
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h1>Halo !</h1>
+    <h5>Silahkan Masukkan Feedback</h5>
+    <hr>
+
+    <form action="" method="POST">
+        
+        {% csrf_token %}
+
+        {{ fbForm.as_p }}
+
+        <input type="submit" value="Submit">
+    </form>
+
+    {% endblock %}
+
+</body>
+</html>

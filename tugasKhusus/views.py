@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.conf import settings
-from .forms import BabPengajaranForm, UserForm
+from .forms import BabPengajaranForm, UserForm, FeedbackForm
 
 from .models import generate_filename
 from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, MappingGuru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
@@ -298,6 +298,30 @@ def DeletePresensi_Function(request, nikGuru, pertemuanId, idMapel):
         savedPresensi.delete()
 
         return redirect(f"/tugasKhusus/Presensi/{nikGuru} {savedPresensi.kelas.id} {savedPresensi.kelas.nama} {savedPresensi.mata_pelajaran.kode}")    
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+
+def InsertFeedback(request):
+    
+    if global_isLogin == True:
+        if request.method == 'POST':
+
+            fbForm = FeedbackForm(request.POST)
+
+            if fbForm.is_valid():
+
+                fbForm.instance.nik = global_loginUser
+
+                fbForm.save()
+
+                return redirect("/tugasKhusus/InfoUser")
+        else:
+            fbForm = FeedbackForm()
+
+        context = {'fbForm':fbForm, 'loginUser':global_loginUser}
+
+        template = loader.get_template('InsertFeedback.html')
+        return HttpResponse(template.render(context, request))
     else:
         return HttpResponseRedirect('/tugasKhusus/InfoUser')
 

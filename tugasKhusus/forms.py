@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import BabPengajaran, User
+from .models import BabPengajaran, User, Feedback
 
 
 class UserForm(ModelForm):
@@ -30,4 +30,14 @@ class BabPengajaranForm(ModelForm):
             'status': forms.RadioSelect(choices=status_Choices),
             'materi': forms.NumberInput,
             'catatan_tambahan': forms.TextInput
+        }
+
+class FeedbackForm(ModelForm):
+    class Meta:
+        model = Feedback
+
+        fields = ['feedback']
+
+        widgets = {
+            'feedback': forms.TextInput
         }

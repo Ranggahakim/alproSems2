@@ -17,5 +17,6 @@ urlpatterns = [
     path("Presensi/<str:nikGuru> <int:kelasId> <str:namaKelas> <str:kodeMapel>/InsertPresensi", views.InsertPresensi_Function),
     path("Presensi/<str:nikGuru> <int:pertemuanId> <str:idMapel>/UpdatePresensi", views.UpdatePresensi_Function),
     path("Presensi/<str:nikGuru> <int:pertemuanId> <str:idMapel>/DeletePresensi", views.DeletePresensi_Function),
+    path("InsertFeedback", views.InsertFeedback, name="Insert-Feedback"),
     path("LogOut", views.LogOut, name = "Log-Out")
 ]

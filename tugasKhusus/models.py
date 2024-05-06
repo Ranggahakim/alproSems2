@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 import os
@@ -142,4 +143,4 @@ class Feedback(models.Model):
     id = models.AutoField(("ID Feedback"), auto_created = True, serialize = False, primary_key=True)
     nik = models.ForeignKey("User", on_delete=models.CASCADE)
     feedback = models.CharField(("Feedback"), max_length=255)
-    date = models.DateTimeField(("Feedback date"), auto_now=False, auto_now_add=False)
+    date = models.DateTimeField(("Feedback date"), default=timezone.now)
