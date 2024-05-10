@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from .models import BabPengajaran, User, Feedback
 
-
+# Form for Login
 class UserForm(ModelForm):
     class Meta:
         model = User
@@ -14,6 +14,7 @@ class UserForm(ModelForm):
             'password': forms.PasswordInput
         }
 
+# Form for Presensi
 class BabPengajaranForm(ModelForm):
     class Meta:
         model = BabPengajaran
@@ -32,6 +33,7 @@ class BabPengajaranForm(ModelForm):
             'catatan_tambahan': forms.TextInput
         }
 
+# Form for Feedback
 class FeedbackForm(ModelForm):
     class Meta:
         model = Feedback

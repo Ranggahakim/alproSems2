@@ -1,6 +1,5 @@
 import os
 
-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -12,10 +11,13 @@ from .forms import BabPengajaranForm, UserForm, FeedbackForm
 from .models import generate_filename
 from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, MappingGuru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
 
+# Global Variable, User Info
 global_isLogin = False
 global_loginUser = None
 global_userType = None
 
+
+# You can delete These
 def index(request):
     return HttpResponse("Hello, world. You're at the Tugas Khusus index.")
 
@@ -52,67 +54,90 @@ def Main(request):
     
     return HttpResponse(template.render(context, request))
 
+# ---------------------------------------------------------------
+
+# Function For Login, and render Login Page
 def LoginPage(request):
-    isUserNotExist = False
-    isPasswordWrong = False
+
+    # Define Variable
+    isUserNotExist = False      # Use when user is not exist
+    isPasswordWrong = False     # Use when Password is wrong
 
     if request.method == 'POST':
-    
-        userForm = UserForm(request.POST)
+    # Execute when press Submit Button
+
+        userForm = UserForm(request.POST)     # Get value of form
 
         if userForm.is_valid():
-            Input_username = userForm.instance.username
-            Input_password = userForm.instance.password
+            Input_username = userForm.instance.username     # Get value of Username Field 
+            Input_password = userForm.instance.password     # Get value of Password Field
 
-            # return HttpResponse(Input_username)
             try:
+            # Try search user by username
                 loginUser = User.objects.filter(username = Input_username).get()
+
             except:
+            # Execute when User Not Exist
                 isUserNotExist = True
                 return HttpResponseRedirect("login?isUserNotExist=True")
+            
             else:
-                #return HttpResponse(loginSiswa)
+            # Execute when user is Exist
+
                 if loginUser.password == Input_password:
-                    
+                # Execute if password is correct
+
+                    # Change value of Is_login (global variable) to True
                     global global_isLogin
                     global_isLogin = True
 
+                    # Insert value of User that login (global variable)
                     global global_loginUser
                     global_loginUser = loginUser
                     
-                    
+                    # Redirect to tugasKhusus/InfoUser
                     return HttpResponseRedirect('InfoUser')
+                
                 else:
+                #Execyte if Passwird us wrong
                     return HttpResponseRedirect("login?isPasswordWrong=True")
 
     else:
+    # Execute when open /tugasKhusus/Login
+
+        # idk what is this :))), but don't delete this (i'm afraid this is important) 
         if 'isUserNotExist' in request.GET:
             isUserNotExist = True
         if 'isPasswordWrong' in request.GET:
             isPasswordWrong = True
 
-        userForm = UserForm
-        context = {'userForm':userForm, 'isUserNotExist':isUserNotExist, 'isPasswordWrong':isPasswordWrong}
+        
+        userForm = UserForm         # Define variable for Form
 
-        template = loader.get_template('login.html')
-        return HttpResponse(template.render(context, request))
+        # These are important, just copy paste it
+        context = {'userForm':userForm, 'isUserNotExist':isUserNotExist, 'isPasswordWrong':isPasswordWrong} # This is for define variable
+    
+        template = loader.get_template('login.html')            # this is for define html file that will be open
+        return HttpResponse(template.render(context, request)) 
 
 
+# Function to show Info of User
 def InfoUser(request):
     
-    listRole = {"Siswa": Siswa, "Guru": Guru, "Karyawan": Karyawan}
+    listRole = {"Siswa": Siswa, "Guru": Guru, "Karyawan": Karyawan}     # Define list role of user
 
-    userType = str()
-    user = global_loginUser
+    userType = str()            # Define userType variable that has string dataType
 
+    # Define variable with null value
     userData = None
     kelasSiswa = None
     daftarSiswaKelas = None
     kelasGuru = None
 
     for key, value in listRole.items():
+    # Get role of user
         try:
-            userData = value.objects.filter(nik = user.nik).get()
+            userData = value.objects.filter(nik = global_loginUser.nik).get()   # Try find user in each userType model (Siswa, Guru, and Karyawan)
             userType = str(key)
         except:
             continue
@@ -120,22 +145,31 @@ def InfoUser(request):
             break
 
     if userData == None:
-        userType = 'not found'
-        return HttpResponseRedirect('login')
+    # If the user is exist in user model, but the data is not exist in userType model (Siswa, Guru, and Karyawan)
 
-    global global_userType
-    global_userType = userType
+        userType = 'not found'                  # Change UserType to 'not found'
+        return HttpResponseRedirect('login')    # Back to login Page
+
+    global global_userType      # Get global variable of UserType
+    global_userType = userType  # Change value of userType
 
     if userType == "Siswa":
-        kelasSiswa = DaftarSiswaKelas.objects.filter(siswa = user.nik).get().Kelas.nama
+    # Execute when userType is Siswa
+
+        kelasSiswa = DaftarSiswaKelas.objects.filter(siswa = global_loginUser.nik).get().Kelas.nama     # Get kelas of siswa
 
     if userType == "Guru":
+    # Execute when userType is Guru
+        
         try:
-            kelasGuru = Kelas.objects.filter(wali_kelas = user.nik).get()
-            daftarSiswaKelas = DaftarSiswaKelas.objects.filter(Kelas = kelasGuru.id).all()
-        except:
-            print("Guru bukan seorang walas")
+        # Try to find kelas when guru is walas
 
+            kelasGuru = Kelas.objects.filter(wali_kelas = global_loginUser.nik).get()           # Try to get kelas when wali kelas is loginUser 
+            daftarSiswaKelas = DaftarSiswaKelas.objects.filter(Kelas = kelasGuru.id).all()      # Try to get all siswa from that kelas
+
+        except:
+        # Execute if Guru is not walas
+            print("Guru bukan seorang walas")
 
 
     context = {'userData':userData, 'userType':userType, "kelasSiswa": kelasSiswa, "kelasGuru":kelasGuru, "daftarSiswaKelas": daftarSiswaKelas}
@@ -144,39 +178,50 @@ def InfoUser(request):
     return HttpResponse(template.render(context, request))
 
 
+# Function to view nilai of siswa
 def NilaiSiswaFunction(request):
    
-   if global_userType == "Siswa" and global_isLogin == True:
-        
-    nilai = NilaiSiswa.objects.filter(siswa = global_loginUser.nik ).all()
+    if global_userType == "Siswa" and global_isLogin == True:
+    # Execute if user is login and he/she is siswa
 
-    context = {"siswa": Siswa.objects.filter(nik = global_loginUser.nik).get(), "nilai": nilai, "userType": global_userType}
-    
-    template = loader.get_template('nilai_Siswa_Page.html')
-    return HttpResponse(template.render(context, request))
-        
-    # return HttpResponse(mapel)
-   else: 
-       return HttpResponseRedirect('InfoUser')
+        nilai = NilaiSiswa.objects.filter(siswa = global_loginUser.nik ).all()      # Get all nilai of user
 
+        context = {"siswa": Siswa.objects.filter(nik = global_loginUser.nik).get(), "nilai": nilai, "userType": global_userType}
+        
+        template = loader.get_template('nilai_Siswa_Page.html')
+        return HttpResponse(template.render(context, request))
+            
+    else: 
+       return HttpResponseRedirect('/tugasKhusus/InfoUser')      # Back to Info User
+   
+
+# Function to view Presensi Page
 def Presensi_Function(request):
 
     if global_userType == "Guru" and global_isLogin == True:
+    # Execute if user is login and he/she is guru
 
-        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()
+        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()     # Get all kelas from mapping model when guru is teach on it
         
         context = {"userType": global_userType, "mapping":mapping, 'nikGuru':str(global_loginUser.nik)}
 
         template = loader.get_template('Presensi_Page.html')
         return HttpResponse(template.render(context, request))
-    else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
     
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+    
+
+# Function to view list of pertemuan on that kelas
 def PresensiDetail_Function(request, nikGuru, kelasId, namaKelas, kodeMapel):
+
     if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
 
         try:
+        # Try to find all data of daftar pertemuan
             daftarPertemuan = BabPengajaran.objects.filter(kelas__id = kelasId, mata_pelajaran__kode = kodeMapel).all()
+
         except:
             daftarPertemuan = None
 
@@ -184,82 +229,92 @@ def PresensiDetail_Function(request, nikGuru, kelasId, namaKelas, kodeMapel):
 
         template = loader.get_template('PresensiDetail_Page.html')
         return HttpResponse(template.render(context, request))
+        
     else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
 
 
-
+# Function to insert presensi
 def InsertPresensi_Function(request, nikGuru, kelasId, namaKelas, kodeMapel):
 
     if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
 
         if request.method == "POST":
+        # Execute when press submit button
+         
+            bpForm = BabPengajaranForm(request.POST, request.FILES)     # Get value of form, and the FILE IS FOR PICTURE
             
-            bpForm = BabPengajaranForm(request.POST, request.FILES)
-            
-            DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()
+            DaftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()    # Get value of Daftar siswa on that Kelas
 
             if bpForm.is_valid():
                 
-                bpForm.instance.kelas = Kelas.objects.filter(nama = namaKelas).get()
-                bpForm.instance.mata_pelajaran = MataPelajaran.objects.filter(kode = kodeMapel).get()
+                bpForm.instance.kelas = Kelas.objects.filter(nama = namaKelas).get()                    # Insert kelas to form value
+                bpForm.instance.mata_pelajaran = MataPelajaran.objects.filter(kode = kodeMapel).get()   # Inser mapel to form value
 
             
-                bpForm.save(commit=True)
+                bpForm.save(commit=True)        # Save data
 
                 for x in DaftarSiswa:
+                # Save presensi data of all Siswa on that kelas
                     Presensi(mata_pelajaran = MataPelajaran.objects.filter(kode=kodeMapel).get(), siswa = Siswa.objects.filter(nik=x.siswa.nik).get(), pertemuan_ke = bpForm.instance, presensi = int(request.POST.get('presensi_' + x.siswa.nik))).save()
                 
-                return HttpResponseRedirect('?submitted=True')
+                return redirect(f"/tugasKhusus/Presensi/{nikGuru} {kelasId} {namaKelas} {kodeMapel}")
             
-            
-                # return HttpResponse(bpForm.cleaned_data['id'])
         else:
+        # Execute when open insert presensi page
         
             bpForm = BabPengajaranForm
 
-        mapping = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()
+        mapping = DaftarSiswaKelas.objects.filter(Kelas__id = kelasId).all()        # Get all siswa from that kelas
         
         context = {"userType": global_userType, "mapping":mapping, "id":kelasId, "namaKelas":namaKelas, "mapel":kodeMapel, 'bpForm':bpForm}
 
         template = loader.get_template('MasukkanPresensi_Page.html')
         return HttpResponse(template.render(context, request))
-        # return HttpResponse(namaKelas)
-    else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
     
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+
+
+# Function to update presensi   
 def UpdatePresensi_Function(request, nikGuru, pertemuanId, idMapel):
 
     if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct    
 
-        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()
-        # savedPresensi = BabPengajaran.objects.filter(id = 9, mata_pelajaran_id = 2).values()
-
-        # return HttpResponse(savedPresensi)
+        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()   # Get data of presensi
 
         if request.method == "POST":
+        # Execute when press submit
             
-            bpForm = BabPengajaranForm(request.POST, request.FILES, instance=savedPresensi)
+            bpForm = BabPengajaranForm(request.POST, request.FILES, instance=savedPresensi)     # Get value of form, and the FILE IS FOR PICTURE, and get previous data     
             
-            DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+            DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()     # Get Presensi data of siswa
 
             if bpForm.is_valid():
+                
                 if not bpForm.cleaned_data['foto']:
+                # i forget what is this for hehe
                     bpForm.instance.foto =  savedPresensi.foto
-
                     return HttpResponse(savedPresensi.foto)
+                # ------------------------------------------------------
 
-                bpForm.save(commit=True)
+                bpForm.save(commit=True)    # Save data
 
                 for x in DaftarSiswa:
+                # Update presensi data of all siswa on that kelas
                     x.presensi = int(request.POST.get('presensi_' + x.siswa.nik))
-                    x.save()
+                    x.save()    # Save presensi data of siswa
                 
                 return redirect(f"/tugasKhusus/Presensi/{nikGuru} {savedPresensi.kelas.id} {savedPresensi.kelas.nama} {savedPresensi.mata_pelajaran.kode}")
 
-            else:    
+            else:
+            # Execute if bpFom is not valid (i hope it's always valid)    
                 return HttpResponse(str(bpForm))
+            
         else:
+        # Execute when open page to update presensi
         
             bpForm = BabPengajaranForm(initial={
                 'id':pertemuanId,
@@ -272,8 +327,9 @@ def UpdatePresensi_Function(request, nikGuru, pertemuanId, idMapel):
                 'mata_pelajaran': savedPresensi.mata_pelajaran,
                 'foto': savedPresensi.foto
                 })
+            # Get saved data
 
-        mapping = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+        mapping = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all() # Get presensi data of siswa on that kelas
 
         context = {"userType": global_userType, "mapping":mapping, "namaKelas":savedPresensi.kelas.nama, "mapel":savedPresensi.mata_pelajaran.kode, 'bpForm':bpForm, 'foto':savedPresensi.foto}
 
@@ -281,58 +337,66 @@ def UpdatePresensi_Function(request, nikGuru, pertemuanId, idMapel):
         return HttpResponse(template.render(context, request))
     
     else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
 
     
+# Function to delete presensi
 def DeletePresensi_Function(request, nikGuru, pertemuanId, idMapel):
 
     if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
 
-        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()
+        savedPresensi = BabPengajaran.objects.filter(id = pertemuanId, mata_pelajaran_id = idMapel).get()   # Get data of presensi
 
-        DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()
+        DaftarSiswa = Presensi.objects.filter(mata_pelajaran = savedPresensi.mata_pelajaran, pertemuan_ke = savedPresensi.id).all()     # Get presensi data of siswa
 
         for x in DaftarSiswa:
+        # Delete presensi from siswa
             x.delete()
 
         savedPresensi.delete()
 
         return redirect(f"/tugasKhusus/Presensi/{nikGuru} {savedPresensi.kelas.id} {savedPresensi.kelas.nama} {savedPresensi.mata_pelajaran.kode}")    
+    
     else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
 
+
+# Function to insert Feedback
 def InsertFeedback(request):
     
     if global_isLogin == True:
-        if request.method == 'POST':
+    # Execute if user is login
 
-            fbForm = FeedbackForm(request.POST)
+        if request.method == 'POST':
+        # Execute if press submit button
+
+            fbForm = FeedbackForm(request.POST)     # Get value of form
 
             if fbForm.is_valid():
 
                 fbForm.instance.nik = global_loginUser
 
-                fbForm.save()
+                fbForm.save()       # Save feedback data
 
-                return redirect("/tugasKhusus/InfoUser")
+                return redirect("/tugasKhusus/InfoUser")    # Back to Info User
         else:
             fbForm = FeedbackForm()
 
-        context = {'fbForm':fbForm, 'loginUser':global_loginUser}
+        context = {'fbForm':fbForm, 'loginUser':global_loginUser, 'userType':global_userType}
 
         template = loader.get_template('InsertFeedback.html')
         return HttpResponse(template.render(context, request))
+    
     else:
-        return HttpResponseRedirect('/tugasKhusus/InfoUser')
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')        # Back to Info User
 
+
+# Function when press log out
 def LogOut(request):
     global global_isLogin, global_loginUser, global_userType
     global_isLogin = False
     global_loginUser = None
     global_userType = None
 
-    # return HttpResponse("User tidak ditemukan!")
-
-    # return reverse("Login-Page")
-
-    return HttpResponseRedirect('login')
+    return HttpResponseRedirect('login')       # Back to login page
