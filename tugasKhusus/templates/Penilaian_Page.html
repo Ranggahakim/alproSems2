@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masukkan Presensi</title>
+    <title>Penilaian</title>
 
     {% extends "pageTemplate.html" %}
 
@@ -16,21 +16,19 @@
 
     {% block content %}
     
-    <h1>Presensi</h1>
+    <h1>Mapel</h1>
     <hr>
 
     <table class="table table-bordered border-primary">
         <tr>
-            <th>Kelas</th>
             <th>Mata Pelajaran</th>
             <th>Action</th>
         </tr>
 
         {% for kelas in mapping %}
         <tr>
-            <td> {{kelas.kelas.nama}} </td>
             <td> {{kelas.mata_pelajaran.nama}} </td>
-            <td><a href="Presensi/{{nikGuru}} {{kelas.kelas.id}} {{kelas.kelas.nama}} {{kelas.mata_pelajaran.kode}}"><button>Buka</button></a></td>
+            <td><a href="Penilaian/{{kelas.mata_pelajaran.kode}} {{nikGuru}} "><button>Buka</button></a></td>
         </tr>
         
         {% endfor %}

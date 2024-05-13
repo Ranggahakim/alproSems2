@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import BabPengajaran, User, Feedback
+from .models import BabPengajaran, User, Feedback, KomponenPenilaian
 
 # Form for Login
 class UserForm(ModelForm):
@@ -42,4 +42,15 @@ class FeedbackForm(ModelForm):
 
         widgets = {
             'feedback': forms.TextInput
+        }
+
+class KomponenPenilaianForm(ModelForm):
+    class Meta:
+        model = KomponenPenilaian
+
+        fields = ['nama', 'bobot']
+
+        widgets = {
+            'nama': forms.TextInput,
+            'bobot': forms.TextInput
         }

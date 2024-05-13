@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.conf import settings
-from .forms import BabPengajaranForm, UserForm, FeedbackForm
+from .forms import BabPengajaranForm, UserForm, FeedbackForm, KomponenPenilaianForm
 
 from .models import generate_filename
 from .models import Siswa, NilaiSiswa, Presensi, BabPengajaran, DaftarSiswaKelas, Kelas, Guru, MappingGuru, KomponenPenilaian, MataPelajaran, Karyawan, Kurikulum, User, Feedback
@@ -360,8 +360,82 @@ def DeletePresensi_Function(request, nikGuru, pertemuanId, idMapel):
     
     else:
         return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+   
+
+# Function to view Presensi Page
+def Penilaian_Function(request):
+
+    if global_userType == "Guru" and global_isLogin == True:
+    # Execute if user is login and he/she is guru
+
+        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()     # Get all kelas from mapping model when guru is teach on it
+        
+        context = {"userType": global_userType, "mapping":mapping, 'nikGuru':str(global_loginUser.nik)}
+
+        template = loader.get_template('Penilaian_Page.html')
+        return HttpResponse(template.render(context, request))
+    
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
 
 
+# Function to view list of pertemuan on that kelas
+def PenilaianDetail_Function(request, kodeMapel, nikGuru):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
+
+        try:
+        # Try to find all data of Komponen Penilaian
+            komponenPenilaian = KomponenPenilaian.objects.filter(guru__nik = nikGuru, mata_pelajaran__kode = kodeMapel).all()
+
+        except:
+            komponenPenilaian = None
+
+        context = {"userType": global_userType, "nikGuru":nikGuru, "kodeMapel":kodeMapel, "komponenPenilaian":komponenPenilaian}
+
+        template = loader.get_template('PenilaianDetail_Page.html')
+        return HttpResponse(template.render(context, request))
+        
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+
+
+# Function to insert presensi
+def InsertKomponenPenilaian_Function(request, kodeMapel, nikGuru):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
+
+        if request.method == "POST":
+        # Execute when press submit button
+         
+            kpForm = KomponenPenilaianForm(request.POST)     # Get value of form
+
+            if kpForm.is_valid():
+                
+                kpForm.instance.guru = Guru.objects.filter(nik = nikGuru).get()                    # Insert kelas to form value
+                kpForm.instance.mata_pelajaran = MataPelajaran.objects.filter(kode = kodeMapel).get()   # Inser mapel to form value
+
+            
+                kpForm.save(commit=True)        # Save data
+
+                return redirect(f"/tugasKhusus/Penilaian/{kodeMapel} {nikGuru}")
+            
+        else:
+        # Execute when open insert presensi page
+        
+            kpForm = KomponenPenilaianForm
+        
+        context = {"userType": global_userType,"mapel":kodeMapel, 'kpForm':kpForm}
+
+        template = loader.get_template('MasukkanKomponenPenilaian_Page.html')
+        return HttpResponse(template.render(context, request))
+    
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+
+    
 # Function to insert Feedback
 def InsertFeedback(request):
     

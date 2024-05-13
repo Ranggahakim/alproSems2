@@ -26,7 +26,9 @@ urlpatterns = [
     path("Presensi/<str:nikGuru> <int:pertemuanId> <str:idMapel>/DeletePresensi", views.DeletePresensi_Function),
     
     # Penilaian when UserType == Guru
-    # path("Penilaian", views.Function),
+    path("Penilaian", views.Penilaian_Function),
+    path("Penilaian/<str:kodeMapel> <str:nikGuru>", views.PenilaianDetail_Function),
+    path("Penilaian/<str:kodeMapel> <str:nikGuru>/InsertKomponenPenilaian", views.InsertKomponenPenilaian_Function),
 
     # Insert Feedback when semua UserType
     path("InsertFeedback", views.InsertFeedback, name="Insert-Feedback"),

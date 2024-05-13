@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan Komponen Penilaian</title>
+
+    {% extends "pageTemplate.html" %}
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h4>Kode Mata Pelajaran: {{mapel}}</h4>
+    <hr>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        
+        {% csrf_token %}
+
+        {{ kpForm.as_p }}
+        
+        <input type="submit" value="Submit" style="margin-top: 20px;">
+    </form>
+
+
+    {% endblock %}
+
+</body>
+</html>
