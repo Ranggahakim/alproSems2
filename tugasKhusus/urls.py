@@ -29,6 +29,10 @@ urlpatterns = [
     path("Penilaian", views.Penilaian_Function),
     path("Penilaian/<str:kodeMapel> <str:nikGuru>", views.PenilaianDetail_Function),
     path("Penilaian/<str:kodeMapel> <str:nikGuru>/InsertKomponenPenilaian", views.InsertKomponenPenilaian_Function),
+    
+    # Insert nilai when UserType == Guru
+    path("Penilaian/<str:kodeMapel> <str:nikGuru>/<str:namaKomPenilaian> <str:idKomPenilaian>", views.KomPenilaian_Function),
+    path("Penilaian/<str:kodeMapel> <str:nikGuru>/<str:namaKomPenilaian> <str:idKomPenilaian>/<str:namaKelas> <str:idKelas>", views.KomPenilaianDetail_Function),
 
     # Insert Feedback when semua UserType
     path("InsertFeedback", views.InsertFeedback, name="Insert-Feedback"),

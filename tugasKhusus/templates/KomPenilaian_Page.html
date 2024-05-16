@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan Komponen Penilaian</title>
+
+    {% extends "pageTemplate.html" %}
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    {% block sideBar %}{% endblock  %}
+
+    {% block content %}
+    
+    <h1>Kode Mata Penilaian : {{kodeMapel}}</h1>
+    <h2>Komponen Penilaian : {{namaKomPenilaian}}</h2>
+    <hr>
+    
+    
+    <table class="table table-bordered border-primary">
+        <tr>
+            <th>Kelas</th>
+            <th>Action</th>
+        </tr>
+        {% for mapping in listMapping %}
+        
+        <tr>
+            <td> {{ mapping.kelas.nama }} </td>
+            <td><a href="{{kodeMapel}} {{nikGuru}}/{{namaKomPenilaian}} {{idKomPenilaian}}/UpdateKomponenPenilaian">
+                <button type="submit">Edit</button>
+            </a> 
+                <a href="{{namaKomPenilaian}} {{idKomPenilaian}}/{{mapping.kelas.nama}} {{mapping.kelas.id}}">
+                <button type="submit">Open</button>
+            </a></td>
+        </tr>
+
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{{kodeMapel}} {{nikGuru}}/InsertKomponenPenilaian"><button>+</button></a>
+
+
+    {% endblock %}
+
+</body>
+</html>

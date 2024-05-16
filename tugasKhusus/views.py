@@ -435,6 +435,65 @@ def InsertKomponenPenilaian_Function(request, kodeMapel, nikGuru):
     else:
         return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
 
+
+# Function to view list of pertemuan on that kelas
+def KomPenilaian_Function(request, kodeMapel, nikGuru, namaKomPenilaian, idKomPenilaian):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
+
+        try:
+        # Try to find all data of Kelas from Mapping Guru
+            listMapping = MappingGuru.objects.filter(guru__nik = nikGuru, mata_pelajaran__kode = kodeMapel).all()
+
+        except:
+            listMapping = None
+
+        context = {"userType": global_userType, "nikGuru":nikGuru, "kodeMapel":kodeMapel, "namaKomPenilaian":namaKomPenilaian, "idKomPenilaian":idKomPenilaian, "listMapping":listMapping}
+
+        template = loader.get_template('KomPenilaian_Page.html')
+        return HttpResponse(template.render(context, request))
+        
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+
+
+# Function to view list of pertemuan on that kelas
+def KomPenilaianDetail_Function(request, kodeMapel, nikGuru, namaKomPenilaian, idKomPenilaian, namaKelas, idKelas):
+
+    if global_userType == "Guru" and global_isLogin == True and global_loginUser.nik == nikGuru:
+    # Execute if user is login, and he/she is guru, and the nik is correct
+
+        if request.method == "POST":
+
+            daftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = idKelas).all()
+
+            for x in daftarSiswa:
+                NilaiSiswa(siswa = Siswa.objects.filter(nik = x.siswa.nik).get(), komponen_penilaian = KomponenPenilaian.objects.filter(id = idKomPenilaian).get(), nilai = int(request.POST.get('nilai_' + x.siswa.nik))).save()
+
+        else:
+
+            try:
+            # Try to find all data of Komponen Penilaian
+                daftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = idKelas).all()
+
+            except:
+                daftarSiswa = None
+            
+            try:
+                nilaiSiswa = NilaiSiswa.objects.filter(komponen_penilaian__id = idKomPenilaian).all()
+            except: 
+                nilaiSiswa = None
+            
+
+            context = {"userType": global_userType, "nikGuru":nikGuru, "kodeMapel":kodeMapel, "namaKomPenilaian":namaKomPenilaian, "idKomPenilaian":idKomPenilaian, "daftarSiswa":daftarSiswa, "namaKelas":namaKelas, "idKelas":idKelas, "nilaiSiswa":nilaiSiswa}
+
+            template = loader.get_template('KomPenilaianDetail_Page.html')
+            return HttpResponse(template.render(context, request))
+        
+    else:
+        return HttpResponseRedirect('/tugasKhusus/InfoUser')     # Back to Info User
+
     
 # Function to insert Feedback
 def InsertFeedback(request):
