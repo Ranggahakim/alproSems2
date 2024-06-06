@@ -368,7 +368,7 @@ def Penilaian_Function(request):
     if global_userType == "Guru" and global_isLogin == True:
     # Execute if user is login and he/she is guru
 
-        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).all()     # Get all kelas from mapping model when guru is teach on it
+        mapping = MappingGuru.objects.filter(guru__nik = global_loginUser.nik).distinct('mata_pelajaran')     # Get all kelas from mapping model when guru is teach on it
         
         context = {"userType": global_userType, "mapping":mapping, 'nikGuru':str(global_loginUser.nik)}
 
@@ -469,7 +469,15 @@ def KomPenilaianDetail_Function(request, kodeMapel, nikGuru, namaKomPenilaian, i
             daftarSiswa = DaftarSiswaKelas.objects.filter(Kelas__id = idKelas).all()
 
             for x in daftarSiswa:
-                NilaiSiswa(siswa = Siswa.objects.filter(nik = x.siswa.nik).get(), komponen_penilaian = KomponenPenilaian.objects.filter(id = idKomPenilaian).get(), nilai = int(request.POST.get('nilai_' + x.siswa.nik))).save()
+                
+                try:
+                    nilaiSiswa = NilaiSiswa.objects.filter(siswa = Siswa.objects.filter(nik = x.siswa.nik).get(), komponen_penilaian = KomponenPenilaian.objects.filter(id = idKomPenilaian).get()).get()
+                    nilaiSiswa.nilai = int(request.POST.get('nilai_' + x.siswa.nik))
+                    nilaiSiswa.save()
+                except:
+                    NilaiSiswa(siswa = Siswa.objects.filter(nik = x.siswa.nik).get(), komponen_penilaian = KomponenPenilaian.objects.filter(id = idKomPenilaian).get(), nilai = int(request.POST.get('nilai_' + x.siswa.nik))).save()
+
+            return redirect(f"/tugasKhusus/Penilaian/{kodeMapel} {nikGuru}/{namaKomPenilaian} {idKomPenilaian}")
 
         else:
 
