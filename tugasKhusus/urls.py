@@ -16,7 +16,8 @@ urlpatterns = [
     path("InfoUser", views.InfoUser, name="Info-User"),
     
     # View Nilai when UserType == Siswa
-    path("NilaiSiswa", views.NilaiSiswaFunction, name="Nilai-Siswa"),
+    path("NilaiSiswa/nilai", views.NilaiSiswaFunction, name="Nilai-Siswa"),
+    path("NilaiSiswa/presensi", views.PresensiSiswaFunction, name="Presensi-Siswa"),
     
     # Presensi when UserType == Guru
     path("Presensi", views.Presensi_Function, name="Presensi"),

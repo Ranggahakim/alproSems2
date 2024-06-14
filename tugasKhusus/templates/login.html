@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,55 +9,110 @@
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to right, #e0f7fa, #ffffff);
+            font-family: 'Arial', sans-serif;
+        }
 
+        .login-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-container h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .alert {
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            border-radius: 50px;
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .toggle-password:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="d-flex align-items-center justify-content-center">
+    <div class="login-container">
+        <h1>Silahkan Login</h1>
 
-        
+        {% if isUserNotExist %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            User Tidak Ditemukan
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
 
-        <table>
-            <tr>
-                <th>
-                    <h1>Silahkan Login</h1>
-                </th>
-            </tr>
-            {% if isUserNotExist %}
-                <tr>
-                    <td>
-                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            User Tidak Ditemukan
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>
-                    </td>
-                </tr>
-            {% endif %}
+        {% if isPasswordWrong %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            Password Salah!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
 
-            {% if isPasswordWrong %}
-                <tr>
-                    <td>
-                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            Password Salah!
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>
-                    </td>
-                </tr>
-            {% endif %}
-            <tr>
-                <td>
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        
-                        {{ userForm.as_p }}
-
-                        <input type="submit" value="Submit" class="btn btn-primary">
-                    </form>
-                </td>
-            </tr>
-        </table>
-        
-            
-            
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ userForm.username.label_tag }}
+                {{ userForm.username }}
+            </div>
+            <div class="mb-3 password-container">
+                {{ userForm.password.label_tag }}
+                {{ userForm.password }}
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
     </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.querySelector('input[name="password"]');
+            var passwordFieldType = passwordField.getAttribute('type');
+            if (passwordFieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+            } else {
+                passwordField.setAttribute('type', 'password');
+            }
+        }
+    </script>
 </body>
+
 </html>

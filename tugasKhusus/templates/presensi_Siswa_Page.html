@@ -22,14 +22,12 @@
     <table class="table table-bordered border-primary">
         <tr>
             <td>Mata Pelajaran</td>
-            <td>Komponen Penilaian</td>
-            <td>Nilai</td>
+            <td>Presensi</td>
         </tr>
-        {% for x in  nilai %}
+        {% for x, y in presensi.items %}
         <tr>
-            <td> {{x.komponen_penilaian.mata_pelajaran.nama}} </td>
-            <td> {{x.komponen_penilaian.nama}} </td>
-            <td> {{x.nilai}} </td>
+            <td> {{x}} </td>
+            <td> {{y}} </td>
         </tr>
         {% empty %}
         <tr>

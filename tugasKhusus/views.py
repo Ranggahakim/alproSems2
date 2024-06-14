@@ -193,6 +193,32 @@ def NilaiSiswaFunction(request):
             
     else: 
        return HttpResponseRedirect('/tugasKhusus/InfoUser')      # Back to Info User
+
+
+# Function to view nilai of siswa
+def PresensiSiswaFunction(request):
+   
+    if global_userType == "Siswa" and global_isLogin == True:
+    # Execute if user is login and he/she is siswa
+
+        mapelList = Presensi.objects.filter(siswa__nik = global_loginUser.nik ).distinct('mata_pelajaran')
+
+        presensi = dict()
+
+        for mapel in mapelList:
+            
+            hadir = Presensi.objects.filter(siswa__nik = global_loginUser.nik,  mata_pelajaran = mapel.mata_pelajaran, presensi = 3).count()
+            jml = Presensi.objects.filter(siswa__nik = global_loginUser.nik,  mata_pelajaran = mapel.mata_pelajaran).count()
+            
+            presensi[mapel.mata_pelajaran.nama] = str(str(hadir) + "/" + str(jml))
+
+        context = {"siswa": Siswa.objects.filter(nik = global_loginUser.nik).get(), "presensi": presensi, "mapelList":mapelList, "userType": global_userType}
+        
+        template = loader.get_template('presensi_Siswa_Page.html')
+        return HttpResponse(template.render(context, request))
+            
+    else: 
+       return HttpResponseRedirect('/tugasKhusus/InfoUser')      # Back to Info User
    
 
 # Function to view Presensi Page
